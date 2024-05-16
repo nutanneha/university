@@ -41,12 +41,14 @@ def generate_personalized_advice(university, course, marks):
             f"Provide personalized advice and additional information for the student to improve their chances of admission."
         )
         openai.api_key = st.secrets["openai"]["api_key"]
-        response = openai.Completion.create(
-            model="text-davinci-003",
-            prompt=prompt,
-            max_tokens=100
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": prompt}
+            ]
         )
-        result = response.choices[0].text.strip()
+        result = response['choices'][0]['message']['content'].strip()
         return result
     except Exception as e:
         st.error(f"An error occurred while generating personalized advice: {e}")
@@ -132,13 +134,4 @@ This app provides university and course recommendations based on your academic m
 """)
 
 st.image("top-10-universities-in-the-world.png", caption="Achieve Your Academic Goals!", use_column_width=True)
-
-
-# Display a university-related image
-st.image("top-10-universities-in-the-world.png", caption="Achieve Your Academic Goals!", use_column_width=True)
-
-
-
-
-
 
